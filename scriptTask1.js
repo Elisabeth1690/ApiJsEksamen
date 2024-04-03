@@ -3,6 +3,28 @@ let showFiftyPokemonCard = document.getElementById("showFiftyPokemon");
 
 showFiftyPokemonBtn.onclick = getFiftyPokemon;
 
+async function fetchPokemonType() {
+  try {
+    const typeRequset = await fetch(`https://pokeapi.co/api/v2/type/?limit=18`);
+    let TypeResponse = await typeRequset.json();
+    return TypeResponse;
+  } catch (error) {
+    console.error("klarte ikke å hente apiet", error);
+  }
+}
+/*
+getPokemonType();
+
+async function getPokemonType() {
+  try {let allType = await fetchPokemonType();
+    allTypeArray = allType.results;
+    
+    console.log(allType, allTypeArray);
+  } catch (error) {
+    console.error("klarte ikke å hente fetchen", error);
+  }
+}*/
+
 async function fetchFiftyPokemon() {
   try {
     const pokemonRequset = await fetch(
@@ -15,27 +37,32 @@ async function fetchFiftyPokemon() {
   }
 }
 async function getFiftyPokemon() {
-  //   try {
-  allPokemon = await fetchFiftyPokemon();
-  pokemonArray = allPokemon.results;
-  showFiftyPokemon(pokemonArray);
-  //   } catch (error) {
-  // console.error("klarte ikke å hente fetchen", error);
-  //   }
+  try {
+    let allPokemon = await fetchFiftyPokemon();
+    let pokemonArray = allPokemon.results;
+
+    let allType = await fetchPokemonType();
+    let allTypeArray = allType.results;
+
+    showAllPokemonType(pokemonArray, allTypeArray);
+  } catch (error) {
+    console.error("klarte ikke å hente fetchen", error);
+  }
 }
 
-function showFiftyPokemon(allPokemon) {
-  console.log(allPokemon, "array2");
+function showAllPokemonType(allPokemon, allType) {
+  console.log(allPokemon, "array2", allType);
+
   allPokemon.forEach((pokemon) => {
     const showPokemonCard = document.createElement("div");
     let name = pokemon.name;
     let imageUrl = pokemon.url;
+
+    console.log(imageUrl, "bilde");
     showPokemonCard.innerHTML = `
-    <img
-        src="${imageUrl}"
-    
-      />
-    <p>${name}</p>`;
+    <img src="${imageUrl}"/>
+    <p>${name}</p>
+    `;
 
     showFiftyPokemonCard.appendChild(showPokemonCard);
   });
