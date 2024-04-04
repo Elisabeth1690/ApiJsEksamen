@@ -11,3 +11,17 @@ img {
   width: 100px;
   height: 200px;
 }
+#typesBtn {
+}
+.btnFifty {
+  position: relative;
+  width: 120px;
+  height: 30px;
+  margin: 5px;
+}
+
+.btn {
+  width: 80px;
+  height: 30px;
+  margin: 5px;
+}
