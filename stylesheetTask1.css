@@ -1,11 +1,11 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: rgb(209, 197, 178);
+  background-color: rgb(255, 234, 200);
 }
 h1 {
   text-align: center;
-  color: black;
+  color: rgb(29, 85, 239);
 }
 img {
   width: 100px;
@@ -13,8 +13,6 @@ img {
 }
 
 .btnFifty {
-  display: flex;
-  align-items: center;
   width: 120px;
   height: 30px;
   margin: 5px;
