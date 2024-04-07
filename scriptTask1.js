@@ -25,58 +25,58 @@ document.addEventListener("click", async (e) => {
     fetchPokemonType();
   }
   if (e.target === bugBnt) {
-    fetchType("bug");
+    sootPokomone("bug");
   }
   if (e.target === darkBnt) {
-    fetchType("dark");
+    sootPokomone("dark");
   }
   if (e.target === dragonBnt) {
-    fetchType("dragon");
+    sootPokomone("dragon");
   }
   if (e.target === electrikBnt) {
-    fetchType("electrik");
+    sootPokomone("electric");
   }
   if (e.target === fairyBnt) {
-    fetchType("fairy");
+    sootPokomone("fairy");
   }
   if (e.target === fightingBnt) {
-    fetchType("fighting");
+    sootPokomone("fighting");
   }
   if (e.target === fireBnt) {
-    fetchType("fire");
+    sootPokomone("fire");
   }
   if (e.target === flyingBnt) {
-    fetchType("flying");
+    sootPokomone("flying");
   }
   if (e.target === ghostBnt) {
-    fetchType("ghost");
+    sootPokomone("ghost");
   }
   if (e.target === grassBnt) {
-    fetchType("grass");
+    sootPokomone("grass");
   }
   if (e.target === groundBnt) {
-    fetchType("ground");
+    sootPokomone("ground");
   }
   if (e.target === iceBnt) {
-    fetchType("ice");
+    sootPokomone("ice");
   }
   if (e.target === normalBnt) {
-    fetchType("normal");
+    sootPokomone("normal");
   }
   if (e.target === poisonBnt) {
-    fetchType("poison");
+    sootPokomone("poison");
   }
   if (e.target === pyschicBnt) {
-    fetchType("pyschic");
+    sootPokomone("pyschic");
   }
   if (e.target === rockBnt) {
-    fetchType("rock");
+    sootPokomone("rock");
   }
   if (e.target === steelBnt) {
-    fetchType("steel");
+    sootPokomone("steel");
   }
   if (e.target === waterBnt) {
-    fetchType("water");
+    sootPokomone("water");
   }
 });
 //https://medium.com/@sergio13prez/fetching-them-all-poke-api-62ca580981a2
@@ -90,7 +90,6 @@ async function fetchPokemonType() {
         showPokemonContainer.innerHTML = "";
         allpokemons.results.forEach(function (pokemonFullInfo) {
           fetchPokemonFullInfo(pokemonFullInfo);
-          console.log(allpokemons, "inne i første");
         });
       });
   } catch (error) {
@@ -112,12 +111,12 @@ function fetchPokemonFullInfo(pokemonFullInfo) {
 
 function showPokemon(pokeDex) {
   let pokemonCard = document.createElement("div");
-  let pokemonName = pokeDex.name;
+  let pokemonName =
+    pokeDex.name.charAt(0).toUpperCase() + pokeDex.name.slice(1);
   let pokemonId = pokeDex.id;
   let pokemonType =
     pokeDex.types[0].type.name.charAt(0).toUpperCase() +
     pokeDex.types[0].type.name.slice(1); // fikk hjelp av chatgpt om hvordan jeg skulle nøste ut bare en type.
-  console.log("inne i showPokemon", pokemonName, pokemonId, pokemonType);
   pokemonCard.innerHTML = ` 
   <p>#${pokemonId}</p>
 <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
@@ -130,46 +129,57 @@ Type: ${pokemonType}</p>
 
 /////////////////////////////////////////////////////////////
 ///////Filtereing av typer
-async function fetchType(type) {
-  console.log(type);
+
+fetchType();
+async function fetchType() {
   try {
     await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=50`)
       .then((response) => response.json())
       .then(function (allpokemons) {
         showPokemonContainer.innerHTML = "";
-        console.log(allpokemons.results, "allepokemon");
         allpokemons.results.forEach(function (pokemonFullInfo) {
-          console.log(allpokemons, "allpokemon");
-          fetchPokemonTypeFullInfo(pokemonFullInfo, type);
+          fetchPokemonTypeFullInfo(pokemonFullInfo);
         });
       });
   } catch (error) {
     console.error("klarte ikke å hente apiet", error);
   }
 }
-
-async function fetchPokemonTypeFullInfo(pokemonFullInfo, type) {
-  console.log(type);
+let pokeArray = [];
+async function fetchPokemonTypeFullInfo(pokemonFullInfo) {
   try {
     let url = await pokemonFullInfo.url;
     fetch(url)
       .then((response) => response.json())
       .then(function (pokeDex) {
-        sootPokomone(pokeDex, type);
+        pokeArray.push(pokeDex);
       });
   } catch (error) {
     console.error("klarte ikke og hente pokemonFullInfo", error);
   }
 }
 
-function sootPokomone(pokeDex, type) {
-  console.log(pokeDex, type);
-  let pokemonType =
-    pokeDex.types[0].type.name.charAt(0).toUpperCase() +
-    pokeDex.types[0].type.name.slice(1);
-  console.log(pokemonType, "pokemoneType");
-  if (pokemonType.toLowerCase() === type) {
-    showPokemon(pokeDex);
+function sootPokomone(type) {
+  let typePokemon = pokeArray.filter(
+    (pokemon) => pokemon.types[0].type.name === type
+  ); /// chatGpt hjalp meg med å finne rikitg måte og flitere på.
+  // litt irriterende og spørre hen om dette, siden jeg egentlig kunne det.
+  //og har gjort det på staylingen uten hjelp....
+
+  if (typePokemon.length > 0) {
+    showPokemonContainer.innerHTML = "";
+    typePokemon.forEach(function (pokemonTypeDex) {
+      showPokemon(pokemonTypeDex);
+    });
+  } else {
+    showPokemonContainer.innerHTML = `<p> Beklager, men vi har ikke hentet ut typen: ${
+      type.charAt(0).toUpperCase() + type.slice(1)
+    } blandt de 50 pokemonene</br>
+    Om 5 sekunder vil du få se alle de 50 første pokemonene</p> `;
+    setTimeout(() => {
+      fetchPokemonType();
+    }, 5000);
+    console.log(typePokemon, "inne i elsen");
   }
 }
 
