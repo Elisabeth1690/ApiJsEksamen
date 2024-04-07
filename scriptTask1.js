@@ -1,6 +1,6 @@
 const showFiftyPokemonBtn = document.querySelector("#showFiftyPokemonBtn");
 let showPokemonContainer = document.getElementById("showPokemonContainer");
-
+let ContainerTxtShow = document.getElementById("ContainerTxtShow");
 const bugBnt = document.getElementById("bugBnt");
 const darkBnt = document.getElementById("darkBnt");
 const dragonBnt = document.getElementById("dragonBnt");
@@ -34,7 +34,7 @@ document.addEventListener("click", async (e) => {
     fetchType("dragon");
   }
   if (e.target === electrikBnt) {
-    fetchType("electrik");
+    fetchType("electric");
   }
   if (e.target === fairyBnt) {
     fetchType("fairy");
@@ -90,7 +90,6 @@ async function fetchPokemonType() {
         showPokemonContainer.innerHTML = "";
         allpokemons.results.forEach(function (pokemonFullInfo) {
           fetchPokemonFullInfo(pokemonFullInfo);
-          console.log(allpokemons, "inne i første");
         });
       });
   } catch (error) {
@@ -112,12 +111,12 @@ function fetchPokemonFullInfo(pokemonFullInfo) {
 
 function showPokemon(pokeDex) {
   let pokemonCard = document.createElement("div");
-  let pokemonName = pokeDex.name;
+  let pokemonName =
+    pokeDex.name.charAt(0).toUpperCase() + pokeDex.name.slice(1);
   let pokemonId = pokeDex.id;
   let pokemonType =
     pokeDex.types[0].type.name.charAt(0).toUpperCase() +
     pokeDex.types[0].type.name.slice(1); // fikk hjelp av chatgpt om hvordan jeg skulle nøste ut bare en type.
-  console.log("inne i showPokemon", pokemonName, pokemonId, pokemonType);
   pokemonCard.innerHTML = ` 
   <p>#${pokemonId}</p>
 <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
@@ -130,16 +129,14 @@ Type: ${pokemonType}</p>
 
 /////////////////////////////////////////////////////////////
 ///////Filtereing av typer
+let pokeArray = [];
 async function fetchType(type) {
-  console.log(type);
   try {
     await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=50`)
       .then((response) => response.json())
       .then(function (allpokemons) {
         showPokemonContainer.innerHTML = "";
-        console.log(allpokemons.results, "allepokemon");
         allpokemons.results.forEach(function (pokemonFullInfo) {
-          console.log(allpokemons, "allpokemon");
           fetchPokemonTypeFullInfo(pokemonFullInfo, type);
         });
       });
@@ -149,12 +146,13 @@ async function fetchType(type) {
 }
 
 async function fetchPokemonTypeFullInfo(pokemonFullInfo, type) {
-  console.log(type);
   try {
     let url = await pokemonFullInfo.url;
     fetch(url)
       .then((response) => response.json())
       .then(function (pokeDex) {
+        pokeArray.push(pokeDex);
+
         sootPokomone(pokeDex, type);
       });
   } catch (error) {
