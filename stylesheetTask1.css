@@ -32,3 +32,58 @@ p {
   color: black;
   margin-left: 10px;
 }
+#bugBnt {
+  background-color: rgb(168, 243, 114);
+  color: white;
+}
+#darkBnt {
+  background-color: rgb(124, 125, 123);
+}
+#dragonBnt {
+  background-color: rgb(248, 74, 178);
+}
+#electricBnt {
+  background-color: rgb(255, 247, 88);
+}
+#fairyBnt {
+  background-color: rgb(145, 110, 243);
+}
+#fightingBnt {
+  background-color: rgb(205, 153, 31);
+}
+#fireBnt {
+  background-color: rgb(245, 14, 14);
+}
+#flyingBnt {
+  background-color: rgb(50, 215, 248);
+}
+#ghostBnt {
+  background-color: rgb(176, 210, 216);
+}
+#grassBnt {
+  background-color: rgb(116, 198, 57);
+}
+#groundBnt {
+  background-color: rgb(189, 144, 85);
+}
+#iceBnt {
+  background-color: rgb(190, 223, 229);
+}
+#normalBnt {
+  background-color: rgb(216, 168, 101);
+}
+#poisonBnt {
+  background-color: rgb(100, 66, 221);
+}
+#pyschicBnt {
+  background-color: rgb(64, 16, 236);
+}
+#rockBnt {
+  background-color: rgb(106, 106, 106);
+}
+#steelBnt {
+  background-color: rgb(175, 176, 176);
+}
+#waterBnt {
+  background-color: rgb(10, 121, 241);
+}
