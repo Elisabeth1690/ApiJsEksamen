@@ -4,7 +4,7 @@ let showPokemonContainer = document.getElementById("showPokemonContainer");
 const bugBnt = document.getElementById("bugBnt");
 const darkBnt = document.getElementById("darkBnt");
 const dragonBnt = document.getElementById("dragonBnt");
-const electrikBnt = document.getElementById("electrikBnt");
+const electricBnt = document.getElementById("electricBnt");
 const fairyBnt = document.getElementById("fairyBnt");
 const fightingBnt = document.getElementById("fightingBnt");
 const fireBnt = document.getElementById("fireBnt");
@@ -33,7 +33,7 @@ document.addEventListener("click", async (e) => {
   if (e.target === dragonBnt) {
     sootPokomone("dragon");
   }
-  if (e.target === electrikBnt) {
+  if (e.target === electricBnt) {
     sootPokomone("electric");
   }
   if (e.target === fairyBnt) {
@@ -99,7 +99,7 @@ async function fetchPokemonType() {
 // når jeg skrev inn denne koden første gangen så ble det feil
 //så jeg endret til de orginale navnene, for å så endre tilabke til min
 // feilen var i den første fetch. men jeg glemte og endre pokeData
-//til pokeDext, på første push.
+//til pokeDex, på første push.
 function fetchPokemonFullInfo(pokemonFullInfo) {
   let url = pokemonFullInfo.url;
   fetch(url)
@@ -159,13 +159,15 @@ async function fetchPokemonTypeFullInfo(pokemonFullInfo) {
   }
 }
 
+/// chatGpt hjalp meg med å finne rikitg måte og flitere på.
+// litt irriterende og spørre hen om dette, siden jeg egentlig kunne det.
+//og har gjort det på staylingen uten hjelp....
+// hadde vist fått hjelp av chatGpt på staylingen også, beklager det!
+
 function sootPokomone(type) {
   let typePokemon = pokeArray.filter(
     (pokemon) => pokemon.types[0].type.name === type
-  ); /// chatGpt hjalp meg med å finne rikitg måte og flitere på.
-  // litt irriterende og spørre hen om dette, siden jeg egentlig kunne det.
-  //og har gjort det på staylingen uten hjelp....
-
+  );
   if (typePokemon.length > 0) {
     showPokemonContainer.innerHTML = "";
     typePokemon.forEach(function (pokemonTypeDex) {
@@ -199,6 +201,9 @@ function styleCardColor(pokemonCard, pokemonType) {
   }
   if (pokemonType.toLowerCase() === "dark") {
     pokemonCard.style.backgroundColor = "rgb(124, 125, 123)";
+  }
+  if (pokemonType.toLowerCase() === "dragon") {
+    pokemonCard.style.backgroundColor = "rgb(248, 74, 178)";
   }
   if (pokemonType.toLowerCase() === "electric") {
     pokemonCard.style.backgroundColor = "rgb(255, 247, 88)";
