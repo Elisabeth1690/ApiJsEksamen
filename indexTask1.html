@@ -7,7 +7,8 @@
     <title>Pokemon</title>
   </head>
   <body>
-    <h1>Pokémon</h1>
+
+    <h1 id="h1pokemon">Pokémon</h1>
 
     <div id="typesBtn">
         <button  class="btn"  id="bugBnt" value="">Bug</button>
@@ -35,9 +36,39 @@
       <button type="button" class="btnFifty" id="showFiftyPokemonBtn">
         Vis 50 Pokémon
       </button>
+      <div id="makePokemonContainer">
+        <p>Velg en pokemontype</p>
+        <select name="" id="chosePokemon">
+            <option value="bug">Bug</option>
+            <option value="dark">Dark</option>
+            <option value="dragon">Dragon</option>
+            <option value="electric">Electric</option>
+            <option value="fairy">Fairy</option>
+            <option value="fighting">Fighting</option>
+            <option value="fire">Fire</option>
+            <option value="flying">Flying</option> 
+            <option value="ghost">Ghost</option>
+            <option value="grass">Grass</option>
+            <option value="ground">Ground</option>
+            <option value="ice">Ice</option>
+            <option value="normal">Normal</option>
+            <option value="poison">Poison</option>
+            <option value="pyschic">Pyschic</option>
+            <option value="rock">Rock</option>
+            <option value="steel">Steel</option>
+            <option value="water">Water</option>
+          </select>
+        
+          <button id="makePokeTypeBtn">Lag din pokemon</button>
+      </div>
     
       <div id="showPokemonContainer"></div>
-   
+      <div>
+        <h3>Lagrede Kort :</h3>
+        <div id="savedCardsContainer">
+
+        </div>
+    </div>
 
       
 

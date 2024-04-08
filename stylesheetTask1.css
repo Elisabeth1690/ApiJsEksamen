@@ -3,7 +3,7 @@ body {
   padding: 0;
   background-color: rgb(255, 234, 200);
 }
-h1 {
+#h1pokemon {
   text-align: center;
   color: rgb(29, 85, 239);
 }
@@ -31,6 +31,11 @@ img {
 p {
   color: black;
   margin-left: 10px;
+}
+#makePokemonContainer {
+  width: 500px;
+  height: 100px;
+  background-color: aquamarine;
 }
 #bugBnt {
   background-color: rgb(168, 243, 114);
