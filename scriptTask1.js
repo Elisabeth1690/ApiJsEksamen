@@ -179,6 +179,7 @@ function sootPokomone(type) {
   );
 
   if (typePokemon.length > 0) {
+    console.log(typePokemon);
     showPokemonContainer.innerHTML = "";
     typePokemon.forEach(function (pokemonTypeDex, index) {
       showPokemon(pokemonTypeDex, index);
@@ -195,7 +196,7 @@ function sootPokomone(type) {
 }
 
 ////////
-///1.3
+///1.3 lag en pokemon
 const makePokeTypeBtn = document.getElementById("makePokeTypeBtn");
 makePokeTypeBtn.onclick = getCreatePokemontType;
 function getCreatePokemontType() {
@@ -205,8 +206,23 @@ function getCreatePokemontType() {
 }
 function pokeName(createType) {
   let chosePokeName = prompt("hva vil du at pokemonen din skal hete?");
-
-  console.log(createType, chosePokeName);
+  let choseNum = Math.floor(Math.random() * 200) + 50;
+  if (!chosePokeName) {
+    alert(" Ops, du glemte å skrive navn, prøv igjen");
+    chosePokeName = prompt("hva vil du at pokemonen din skal hete?");
+  }
+  if (savedPokemonCards.length < 15) {
+    let newPokemonQueen = {
+      name: `${chosePokeName}`,
+      id: `${choseNum}`,
+      types: [{ type: { name: `${createType}` } }],
+    };
+    savedPokemonCards.push(newPokemonQueen);
+    savePokemonInLocalStorge(newPokemonQueen);
+    fatchSavedPokemonCards();
+  } else {
+    alert("Du for ikke lagre mer enn 15 favoritter, vær vennlig og slett en");
+  }
 }
 ////////////////////////
 ////////////////1.4 lagre kort
