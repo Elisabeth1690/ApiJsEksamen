@@ -1,5 +1,6 @@
 const showFiftyPokemonBtn = document.querySelector("#showFiftyPokemonBtn");
 let showPokemonContainer = document.getElementById("showPokemonContainer");
+const savedCardsContainer = document.getElementById("savedCardsContainer");
 
 const bugBnt = document.getElementById("bugBnt");
 const darkBnt = document.getElementById("darkBnt");
@@ -88,8 +89,8 @@ async function fetchPokemonType() {
       .then((response) => response.json())
       .then(function (allpokemons) {
         showPokemonContainer.innerHTML = "";
-        allpokemons.results.forEach(function (pokemonFullInfo) {
-          fetchPokemonFullInfo(pokemonFullInfo);
+        allpokemons.results.forEach(function (pokemonFullInfo, index) {
+          fetchPokemonFullInfo(pokemonFullInfo, index);
         });
       });
   } catch (error) {
@@ -100,16 +101,16 @@ async function fetchPokemonType() {
 //så jeg endret til de orginale navnene, for å så endre tilabke til min
 // feilen var i den første fetch. men jeg glemte og endre pokeData
 //til pokeDex, på første push.
-function fetchPokemonFullInfo(pokemonFullInfo) {
+function fetchPokemonFullInfo(pokemonFullInfo, index) {
   let url = pokemonFullInfo.url;
   fetch(url)
     .then((response) => response.json())
     .then(function (pokeDex) {
-      showPokemon(pokeDex);
+      showPokemon(pokeDex, index);
     });
 }
 
-function showPokemon(pokeDex) {
+function showPokemon(pokeDex, index) {
   let pokemonCard = document.createElement("div");
   let pokemonName =
     pokeDex.name.charAt(0).toUpperCase() + pokeDex.name.slice(1);
@@ -122,9 +123,15 @@ function showPokemon(pokeDex) {
 <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
 <p>Name: ${pokemonName} <br/>
 Type: ${pokemonType}</p>
+<button class="saveBtn" data-index="${index}">Save</button>
 `;
   styleCardColor(pokemonCard, pokemonType);
   showPokemonContainer.appendChild(pokemonCard);
+  const savePokeBtn = document.querySelector(`.saveBtn[data-index="${index}"]`);
+  savePokeBtn.style.backgroundColor = "green";
+  savePokeBtn.onclick = function () {
+    savePokeCard(pokeDex);
+  };
 }
 
 /////////////////////////////////////////////////////////////
@@ -168,10 +175,11 @@ function sootPokomone(type) {
   let typePokemon = pokeArray.filter(
     (pokemon) => pokemon.types[0].type.name === type
   );
+
   if (typePokemon.length > 0) {
     showPokemonContainer.innerHTML = "";
-    typePokemon.forEach(function (pokemonTypeDex) {
-      showPokemon(pokemonTypeDex);
+    typePokemon.forEach(function (pokemonTypeDex, index) {
+      showPokemon(pokemonTypeDex, index);
     });
   } else {
     showPokemonContainer.innerHTML = `<p> Beklager, men vi har ikke hentet ut typen: ${
@@ -181,17 +189,88 @@ function sootPokomone(type) {
     setTimeout(() => {
       fetchPokemonType();
     }, 5000);
-    console.log(typePokemon, "inne i elsen");
   }
 }
 
+////////
+///1.3
+const makePokeTypeBtn = document.getElementById("makePokeTypeBtn");
+makePokeTypeBtn.onclick = getCreatePokemontType;
+function getCreatePokemontType() {
+  let createType = document.querySelector("#chosePokemon").value;
+  console.log(createType);
+  pokeName(createType);
+}
+function pokeName(createType) {
+  let chosePokeName = prompt("hva vil du at pokemonen din skal hete?");
+
+  console.log(createType, chosePokeName);
+}
+////////////////////////
+////////////////1.4
+let savedPokemonCards = [];
+function savePokeCard(pokeDex) {
+  if (savedPokemonCards.length < 30) {
+    const findCard = savedPokemonCards.some((item) => item.id === pokeDex.id);
+
+    if (!findCard) {
+      savePokemonInLocalStorge(pokeDex);
+      savedPokemonCards.push(pokeDex);
+      console.log(savedPokemonCards, "array");
+    }
+  } else {
+    alert("Du for ikke lagre mer enn 30");
+  }
+
+  console.log(pokeDex, "inne i savecard", index);
+}
+
+function savePokemonInLocalStorge(pokeDex) {
+  if (savedPokemonCards.length < 30) {
+    const savePokemonCardsLocal =
+      JSON.parse(localStorage.getItem("PokemonKort")) || [];
+    savePokemonCardsLocal.push(pokeDex);
+    localStorage.setItem("PokemonKort", JSON.stringify(savePokemonCardsLocal));
+  } else {
+  }
+}
+//////////////
+///////Hente lagrde Kort
+fatchSavedPokemonCards();
+function fatchSavedPokemonCards() {
+  const fatchPokemon = JSON.parse(localStorage.getItem("PokemonKort")) || [];
+
+  fatchPokemon.forEach((pokemon) => {
+    console.log(pokemon, "hente lagred");
+    let pokemonSavedCard = document.createElement("div");
+    let pokemonName =
+      pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+    let pokemonId = pokemon.id;
+    let pokemonType =
+      pokemon.types[0].type.name.charAt(0).toUpperCase() +
+      pokemon.types[0].type.name.slice(1);
+
+    pokemonSavedCard.innerHTML = ` 
+    <p>#${pokemonId}</p>
+  <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
+  <p>Name: ${pokemonName} <br/>
+  Type: ${pokemonType}</p>
+
+  `;
+    styleCardColor(pokemonSavedCard, pokemonType);
+    savedCardsContainer.appendChild(pokemonSavedCard);
+  });
+}
+
+//////////////////////////
+///////////// styling av kort
 function styleCardColor(pokemonCard, pokemonType) {
   pokemonCard.style.display = "flex";
   pokemonCard.style.flexDirection = "column";
   pokemonCard.style.padding = "5px";
   pokemonCard.style.color = "blue";
   pokemonCard.style.width = "150px";
-  pokemonCard.style.height = "220px";
+  pokemonCard.style.height = "280px";
   pokemonCard.style.border = "2px solid black";
   pokemonCard.style.borderRadius = "15px";
   pokemonCard.style.margin = "20px";
