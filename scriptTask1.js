@@ -240,7 +240,7 @@ fatchSavedPokemonCards();
 function fatchSavedPokemonCards() {
   const fatchPokemon = JSON.parse(localStorage.getItem("PokemonKort")) || [];
 
-  fatchPokemon.forEach((pokemon) => {
+  fatchPokemon.forEach((pokemon, index) => {
     console.log(pokemon, "hente lagred");
     let pokemonSavedCard = document.createElement("div");
     let pokemonName =
@@ -255,11 +255,32 @@ function fatchSavedPokemonCards() {
   <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
   <p>Name: ${pokemonName} <br/>
   Type: ${pokemonType}</p>
-
+  <button class="rewritePokeBtn" data-index="${index}">Redigere</button>
+  <button class="deleteBtn" data-index="${index}">Delete</button>
   `;
     styleCardColor(pokemonSavedCard, pokemonType);
     savedCardsContainer.appendChild(pokemonSavedCard);
+    const rewritePokeBtn = document.querySelector(
+      `.rewritePokeBtn[data-index="${index}"]`
+    );
+    rewritePokeBtn.addEventListener("click", () => {
+      rewritePokemonBtn(pokemonSavedCard, index);
+    });
+
+    const deleteBtn = document.querySelector(
+      `.deleteBtn[data-index="${index}"]`
+    );
+    deleteBtn.addEventListener("click", () => {
+      deletePokeCard(index);
+    });
   });
+}
+function rewritePokemonBtn(pokemonSavedCard, index) {
+  console.log(pokemonSavedCard, index);
+}
+
+function deletePokeCard(index) {
+  console.log(index);
 }
 
 //////////////////////////
