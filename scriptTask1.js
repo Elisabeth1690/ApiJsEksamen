@@ -1,6 +1,8 @@
 const showFiftyPokemonBtn = document.querySelector("#showFiftyPokemonBtn");
 let showPokemonContainer = document.getElementById("showPokemonContainer");
 const savedCardsContainer = document.getElementById("savedCardsContainer");
+let pokeArray = [];
+let savedPokemonCards = [];
 
 const bugBnt = document.getElementById("bugBnt");
 const darkBnt = document.getElementById("darkBnt");
@@ -152,7 +154,7 @@ async function fetchType() {
     console.error("klarte ikke å hente apiet", error);
   }
 }
-let pokeArray = [];
+
 async function fetchPokemonTypeFullInfo(pokemonFullInfo) {
   try {
     let url = await pokemonFullInfo.url;
@@ -207,26 +209,26 @@ function pokeName(createType) {
   console.log(createType, chosePokeName);
 }
 ////////////////////////
-////////////////1.4
-let savedPokemonCards = [];
+////////////////1.4 lagre kort
+
 function savePokeCard(pokeDex) {
-  if (savedPokemonCards.length < 30) {
+  if (savedPokemonCards.length < 15) {
     const findCard = savedPokemonCards.some((item) => item.id === pokeDex.id);
 
     if (!findCard) {
       savePokemonInLocalStorge(pokeDex);
       savedPokemonCards.push(pokeDex);
-      console.log(savedPokemonCards, "array");
+      fatchSavedPokemonCards();
     }
   } else {
-    alert("Du for ikke lagre mer enn 30");
+    alert("Du for ikke lagre mer enn 15 favoritter, vær vennlig og slett en");
   }
 
-  console.log(pokeDex, "inne i savecard", index);
+  console.log(pokeDex, "inne i savecard");
 }
 
 function savePokemonInLocalStorge(pokeDex) {
-  if (savedPokemonCards.length < 30) {
+  if (savedPokemonCards.length < 15) {
     const savePokemonCardsLocal =
       JSON.parse(localStorage.getItem("PokemonKort")) || [];
     savePokemonCardsLocal.push(pokeDex);
@@ -239,9 +241,8 @@ function savePokemonInLocalStorge(pokeDex) {
 fatchSavedPokemonCards();
 function fatchSavedPokemonCards() {
   const fatchPokemon = JSON.parse(localStorage.getItem("PokemonKort")) || [];
-
+  savedCardsContainer.innerHTML = "";
   fatchPokemon.forEach((pokemon, index) => {
-    console.log(pokemon, "hente lagred");
     let pokemonSavedCard = document.createElement("div");
     let pokemonName =
       pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
@@ -255,16 +256,40 @@ function fatchSavedPokemonCards() {
   <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
   <p>Name: ${pokemonName} <br/>
   Type: ${pokemonType}</p>
-  <button class="rewritePokeBtn" data-index="${index}">Redigere</button>
+  <p>Velg ny Type:</p>
+  <select class="chosePokemonTyp">
+  <option value="bug">Bug</option>
+  <option value="dark">Dark</option>
+  <option value="dragon">Dragon</option>
+  <option value="electric">Electric</option>
+  <option value="fairy">Fairy</option>
+  <option value="fighting">Fighting</option>
+  <option value="fire">Fire</option>
+  <option value="flying">Flying</option> 
+  <option value="ghost">Ghost</option>
+  <option value="grass">Grass</option>
+  <option value="ground">Ground</option>
+  <option value="ice">Ice</option>
+  <option value="normal">Normal</option>
+  <option value="poison">Poison</option>
+  <option value="pyschic">Pyschic</option>
+  <option value="rock">Rock</option>
+  <option value="steel">Steel</option>
+  <option value="water">Water</option>
+</select>
+<button class="rewritePokeBtn" data-index="${index}">Redigere</button>
   <button class="deleteBtn" data-index="${index}">Delete</button>
   `;
+
     styleCardColor(pokemonSavedCard, pokemonType);
     savedCardsContainer.appendChild(pokemonSavedCard);
     const rewritePokeBtn = document.querySelector(
       `.rewritePokeBtn[data-index="${index}"]`
     );
     rewritePokeBtn.addEventListener("click", () => {
-      rewritePokemonBtn(pokemonSavedCard, index);
+      const selectPokemonType =
+        pokemonSavedCard.querySelector(".chosePokemonTyp").value;
+      rewritePokemonBtn(pokemon, selectPokemonType, index);
     });
 
     const deleteBtn = document.querySelector(
@@ -275,12 +300,49 @@ function fatchSavedPokemonCards() {
     });
   });
 }
-function rewritePokemonBtn(pokemonSavedCard, index) {
-  console.log(pokemonSavedCard, index);
+
+////////
+////1.6
+function rewritePokemonBtn(pokemonCard, selectPokemonType, index) {
+  let newPokemonName = prompt("Skriv inn ny fornavn");
+  console.log(newPokemonName, pokemonCard, "før if");
+  if (newPokemonName !== null && newPokemonName.trim() !== "") {
+    pokemonCard.name = newPokemonName;
+    pokemonCard.types[0].type.name = selectPokemonType;
+    console.log(newPokemonName, "inne i ifen", selectPokemonType);
+  }
+  if (selectPokemonType !== null) {
+    pokemonCard.types[0].type.name = selectPokemonType;
+  }
+  try {
+    console.log("inne i try nummer1", pokemonCard);
+
+    savedPokemonCards[index] = pokemonCard;
+    const savePokemonCardsLocal =
+      JSON.parse(localStorage.getItem("PokemonKort")) || [];
+    savePokemonCardsLocal[index] = pokemonCard;
+    console.log("inne i try", pokemonCard);
+
+    localStorage.setItem("PokemonKort", JSON.stringify(savePokemonCardsLocal));
+    fatchSavedPokemonCards();
+  } catch (error) {
+    console.error("Feil med endring av navn", error);
+  }
 }
 
+///////////////
+/////1.5 Slett Pokemon
 function deletePokeCard(index) {
-  console.log(index);
+  const savePokemonCardsLocal =
+    JSON.parse(localStorage.getItem("PokemonKort")) || [];
+  savePokemonCardsLocal.splice(index, 1);
+  try {
+    savedPokemonCards = savePokemonCardsLocal;
+    localStorage.setItem("PokemonKort", JSON.stringify(savePokemonCardsLocal));
+    fatchSavedPokemonCards();
+  } catch (error) {
+    console.error("klarte ikke og oppdatere arrayet", error);
+  }
 }
 
 //////////////////////////
@@ -291,7 +353,7 @@ function styleCardColor(pokemonCard, pokemonType) {
   pokemonCard.style.padding = "5px";
   pokemonCard.style.color = "blue";
   pokemonCard.style.width = "150px";
-  pokemonCard.style.height = "280px";
+  pokemonCard.style.height = "350px";
   pokemonCard.style.border = "2px solid black";
   pokemonCard.style.borderRadius = "15px";
   pokemonCard.style.margin = "20px";
