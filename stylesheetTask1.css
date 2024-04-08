@@ -32,6 +32,12 @@ p {
   color: black;
   margin-left: 10px;
 }
+#savedCardsContainer {
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+}
+
 #makePokemonContainer {
   width: 500px;
   height: 100px;
