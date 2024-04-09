@@ -28,21 +28,30 @@ function removeAndShow() {
   if (pokeballs.length === 3 && enemyArray.length === 1) {
     console.log("inne i remov");
     letStart.innerHTML = "";
-    showPlayerName.innerText = playerName;
+    console.log(playerName);
     showPokemons();
     showEnemy();
+    showName();
   } else {
     alert("du må først velge pokemon og fiende");
   }
 }
 
+function showName() {
+  showPlayerName.innerText = playerName;
+}
+
 function choseName() {
-  playerName = prompt("Hva vil du hete?");
+  if (gameCounter === 0) {
+    playerName = prompt("Hva vil du hete?");
+    playerName = playerName.charAt(0).toUpperCase() + playerName.slice(1);
+    gameCounter += 10;
+  }
+
   if (!playerName) {
     alert("du må skrive inn et navn!");
     choseName();
   } else {
-    gameCounter += 10;
     console.log(gameCounter, playerName);
   }
 }
