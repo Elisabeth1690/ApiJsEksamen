@@ -1,6 +1,7 @@
 const showFiftyPokemonBtn = document.querySelector("#showFiftyPokemonBtn");
 let showPokemonContainer = document.getElementById("showPokemonContainer");
 const savedCardsContainer = document.getElementById("savedCardsContainer");
+const emptyContainerBtn = document.getElementById("emptyContainer");
 let pokeArray = [];
 let savedPokemonCards = [];
 
@@ -70,7 +71,7 @@ document.addEventListener("click", async (e) => {
     sootPokomone("poison");
   }
   if (e.target === pyschicBnt) {
-    sootPokomone("pyschic");
+    sootPokomone("psychic");
   }
   if (e.target === rockBnt) {
     sootPokomone("rock");
@@ -80,6 +81,9 @@ document.addEventListener("click", async (e) => {
   }
   if (e.target === waterBnt) {
     sootPokomone("water");
+  }
+  if (e.target === emptyContainerBtn) {
+    emptyContainer();
   }
 });
 //https://medium.com/@sergio13prez/fetching-them-all-poke-api-62ca580981a2
@@ -179,7 +183,6 @@ function sootPokomone(type) {
   );
 
   if (typePokemon.length > 0) {
-    console.log(typePokemon);
     showPokemonContainer.innerHTML = "";
     typePokemon.forEach(function (pokemonTypeDex, index) {
       showPokemon(pokemonTypeDex, index);
@@ -195,13 +198,12 @@ function sootPokomone(type) {
   }
 }
 
-////////
+/////////
 ///1.3 lag en pokemon
 const makePokeTypeBtn = document.getElementById("makePokeTypeBtn");
 makePokeTypeBtn.onclick = getCreatePokemontType;
 function getCreatePokemontType() {
   let createType = document.querySelector("#chosePokemon").value;
-  console.log(createType);
   pokeName(createType);
 }
 function pokeName(createType) {
@@ -209,7 +211,8 @@ function pokeName(createType) {
   let choseNum = Math.floor(Math.random() * 200) + 50;
   if (!chosePokeName) {
     alert(" Ops, du glemte å skrive navn, prøv igjen");
-    chosePokeName = prompt("hva vil du at pokemonen din skal hete?");
+    let chosePokeName = prompt("hva vil du at pokemonen din skal hete?");
+    console.log(chosePokeName);
   }
   if (savedPokemonCards.length < 15) {
     let newPokemonQueen = {
@@ -217,7 +220,11 @@ function pokeName(createType) {
       id: `${choseNum}`,
       types: [{ type: { name: `${createType}` } }],
     };
+    /// er veldig stolt over den ut nøstingen over her
+
     savedPokemonCards.push(newPokemonQueen);
+    pokeArray.push(newPokemonQueen);
+    console.log(pokeArray, "arrayet");
     savePokemonInLocalStorge(newPokemonQueen);
     fatchSavedPokemonCards();
   } else {
@@ -256,9 +263,10 @@ function savePokemonInLocalStorge(pokeDex) {
 ///////Hente lagrde Kort
 fatchSavedPokemonCards();
 function fatchSavedPokemonCards() {
-  const fatchPokemon = JSON.parse(localStorage.getItem("PokemonKort")) || [];
+  const savePokemonCardsLocal =
+    JSON.parse(localStorage.getItem("PokemonKort")) || [];
   savedCardsContainer.innerHTML = "";
-  fatchPokemon.forEach((pokemon, index) => {
+  savePokemonCardsLocal.forEach((pokemon, index) => {
     let pokemonSavedCard = document.createElement("div");
     let pokemonName =
       pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
@@ -318,7 +326,7 @@ function fatchSavedPokemonCards() {
 }
 
 ////////
-////1.6
+////1.6 Redigere Pokemon
 function rewritePokemonBtn(pokemonCard, selectPokemonType, index) {
   let newPokemonName = prompt("Skriv inn ny fornavn");
   console.log(newPokemonName, pokemonCard, "før if");
@@ -359,6 +367,11 @@ function deletePokeCard(index) {
   } catch (error) {
     console.error("klarte ikke og oppdatere arrayet", error);
   }
+}
+//////////
+////tøm showPokemonContainer
+function emptyContainer() {
+  showPokemonContainer.innerHTML = "";
 }
 
 //////////////////////////
