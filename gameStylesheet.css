@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  padding: 0;
+  width: auto;
+  background-color: aquamarine;
+}
+
+#letStart {
+  margin-left: 20px;
+}
