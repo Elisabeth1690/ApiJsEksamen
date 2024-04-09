@@ -1,34 +1,58 @@
 let gameCounter = 0;
 const nameBtn = document.getElementById("nameBtn");
 const oneBtn = document.getElementById("oneBtn");
-const twoBtn = document.getElementById("twoBtn");
-const threeBtn = document.getElementById("threeBtn");
+const emenyBtn = document.getElementById("choseEmenyBtn");
 const letStart = document.getElementById("letStart");
 const gamePlace = document.getElementById("gamePlace");
+const startBtn = document.getElementById("startBtn");
+const enemyContainer = document.getElementById("enemy");
+let showPlayerName = document.getElementById("playerName");
 let pokeballs = [];
 let playerName;
-
-nameBtn.onclick = choseName;
 
 document.addEventListener("click", async (e) => {
   if (e.target === oneBtn) {
     chosePokemontType("chosePokemonOne");
   }
-  if (e.target === twoBtn) {
-    chosePokemontType("chosePokemonTwo");
+  if (e.target === emenyBtn) {
+    enemyType();
   }
-  if (e.target === threeBtn) {
-    chosePokemontType("chosePokemonThree");
+  if (e.target === nameBtn) {
+    choseName();
+  }
+  if (e.target === startBtn) {
+    removeAndShow();
   }
 });
+function removeAndShow() {
+  if (pokeballs.length === 3 && enemyArray.length === 1) {
+    console.log("inne i remov");
+    letStart.innerHTML = "";
+    showPlayerName.innerText = playerName;
+    showPokemons();
+    showEnemy();
+  } else {
+    alert("du må først velge pokemon og fiende");
+  }
+}
 
 function choseName() {
   playerName = prompt("Hva vil du hete?");
   if (!playerName) {
+    alert("du må skrive inn et navn!");
     choseName();
   } else {
     gameCounter += 10;
-    console.log(gameCounter);
+    console.log(gameCounter, playerName);
+  }
+}
+
+function chosePokemontType(btn) {
+  if (gameCounter === 10) {
+    let choseType = document.querySelector(`#${btn}`).value;
+    fetchType(choseType);
+  } else {
+    alert("Du må velge navn først");
   }
 }
 
@@ -49,17 +73,13 @@ function pokemonArrayPush(pokemon) {
   if (pokeballs.length < 3) {
     pokeballs.push(pokemon);
   } else {
-    letStart.innerHTML = "";
     console.log("du har valgt 3 pokemon");
-    PokemonsFindStatus();
+    alert("du har valgt 3 pokemon og kan ikke velge flere");
   }
 }
 
-function chosePokemontType(btn) {
-  let choseType = document.querySelector(`#${btn}`).value;
-  fetchType(choseType);
-}
-function PokemonsFindStatus() {
+function showPokemons() {
+  console.log("inne i showpokemon", pokeballs);
   pokeballs.forEach((pokemon) => {
     let statusContainer = document.createElement("div");
     // let imageContainer = document.createElement("div");
@@ -79,7 +99,6 @@ function PokemonsFindStatus() {
     Attack: ${pokemonAttack}</br>
     Defend: ${pokemonDefend}</p>
     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>`;
-    console.log(pokemonId);
     styleCardColor(statusContainer, pokemonType);
     gamePlace.appendChild(statusContainer);
   });
@@ -137,7 +156,7 @@ function styleCardColor(pokemonCard, pokemonType) {
   if (pokemonType.toLowerCase() === "poison") {
     pokemonCard.style.backgroundColor = "rgb(100, 66, 221)";
   }
-  if (pokemonType.toLowerCase() === "pyschic") {
+  if (pokemonType.toLowerCase() === "psychic") {
     pokemonCard.style.backgroundColor = "rgb(64, 16, 236)";
   }
   if (pokemonType.toLowerCase() === "rock") {
@@ -149,4 +168,60 @@ function styleCardColor(pokemonCard, pokemonType) {
   if (pokemonType.toLowerCase() === "water") {
     pokemonCard.style.backgroundColor = "rgb(10, 121, 241)";
   }
+}
+////////////////////////////////////////
+////////// Velg Enemy
+function enemyType() {
+  let enemyType = document.querySelector("#choseEmeny").value;
+  console.log(enemyType, "enmyetyp");
+  fetchEnemy(enemyType);
+}
+
+async function fetchEnemy(type) {
+  try {
+    await fetch(`https://pokeapi.co/api/v2/pokemon/${type}`)
+      .then((response) => response.json())
+      .then(function (pokemon) {
+        console.log(pokemon, "finde pokemon");
+        enemyArrayPush(pokemon);
+      });
+  } catch (error) {
+    console.error("klarte ikke å hente apiet", error);
+  }
+}
+
+let enemyArray = [];
+function enemyArrayPush(pokemon) {
+  if (pokeballs.length === 3) {
+    enemyArray.push(pokemon);
+    console.log(enemyArray, "push enemy");
+  } else {
+    alert("Du må velge 3 pokemon først");
+  }
+}
+
+function showEnemy() {
+  console.log("inne i showpokemon", pokeballs);
+  enemyArray.forEach((pokemon) => {
+    let enemyContain = document.createElement("div");
+    // let imageContainer = document.createElement("div");
+    let hpLife = pokemon.stats[0].base_stat;
+    let pokemoneName =
+      pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+    let pokemonAttack = pokemon.stats[1].base_stat;
+    let pokemonDefend = pokemon.stats[2].base_stat;
+    let pokemonId = pokemon.id;
+    let pokemonType =
+      pokemon.types[0].type.name.charAt(0).toUpperCase() +
+      pokemon.types[0].type.name.slice(1);
+    enemyContain.innerHTML = `
+      <p>#${pokemonId}</p>
+      <h1>${pokemoneName}</h1>
+      <p>Life: ${hpLife}</br>
+      Attack: ${pokemonAttack}</br>
+      Defend: ${pokemonDefend}</p>
+      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>`;
+    styleCardColor(enemyContain, pokemonType);
+    enemyContainer.appendChild(enemyContain);
+  });
 }
