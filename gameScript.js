@@ -21,17 +21,23 @@ document.addEventListener("click", async (e) => {
     enemyType();
   }
   if (e.target === nameBtn) {
+    deleteBeforeStarteNewGame();
     choseName();
   }
   if (e.target === startBtn) {
     removeAndShow();
   }
 });
+
+function deleteBeforeStarteNewGame() {
+  localStorage.clear("PokemonBalls");
+  localStorage.clear("enemyMOHAHA");
+}
+
 function removeAndShow() {
   if (pokeballs.length === 3 && enemyArray.length === 1) {
     console.log("inne i remov");
     letStart.innerHTML = "";
-    console.log(playerName);
     showPokemons();
     showEnemy();
     //showName();
@@ -87,6 +93,7 @@ async function fetchType(type) {
 function pokemonArrayPush(pokemon) {
   if (pokeballs.length < 3) {
     pokeballs.push(pokemon);
+    savePokemonBallsInLocalStorge(pokemon);
   } else {
     console.log("du har valgt 3 pokemon");
     alert("du har valgt 3 pokemon og kan ikke velge flere");
@@ -94,8 +101,8 @@ function pokemonArrayPush(pokemon) {
 }
 let countPokeinfo = 0;
 function showPokemons() {
-  console.log("inne i showpokemon", pokeballs);
-  pokeballs.forEach((pokemon) => {
+  const pokemons = JSON.parse(localStorage.getItem("PokemonBalls")) || [];
+  pokemons.forEach((pokemon) => {
     countPokeinfo++;
     let statusContainer = document.createElement("div");
     statusContainer.classList.add(`pokemonInfo${countPokeinfo}`);
@@ -123,8 +130,8 @@ function showPokemons() {
 }
 let imageCounter = 0;
 function showImagePokemons() {
-  console.log("inne i showImagepokemon", pokeballs);
-  pokeballs.forEach((pokemon) => {
+  const pokemons = JSON.parse(localStorage.getItem("PokemonBalls")) || [];
+  pokemons.forEach((pokemon) => {
     imageCounter++;
     let imageContainerPoke = document.createElement("div");
     imageContainerPoke.classList.add(`pokemonImage${imageCounter}`);
@@ -225,9 +232,10 @@ async function fetchEnemy(type) {
 }
 
 let enemyArray = [];
-function enemyArrayPush(pokemon) {
+function enemyArrayPush(enemy) {
   if (pokeballs.length === 3) {
-    enemyArray.push(pokemon);
+    enemyArray.push(enemy);
+    enemySaveInLocalStorge(enemy);
     console.log(enemyArray, "push enemy");
   } else {
     alert("Du må velge 3 pokemon først");
@@ -235,8 +243,8 @@ function enemyArrayPush(pokemon) {
 }
 
 function showEnemy() {
-  console.log("inne i showpokemon", pokeballs);
-  enemyArray.forEach((pokemon) => {
+  const enemyPokemon = JSON.parse(localStorage.getItem("enemyMOHAHA")) || [];
+  enemyPokemon.forEach((pokemon) => {
     let enemyContain = document.createElement("div");
     let hpLife = pokemon.stats[0].base_stat;
     let pokemoneName =
@@ -260,8 +268,9 @@ function showEnemy() {
 }
 
 function showEnemyImagePokemon() {
-  console.log("inne i showImagepokemon", pokeballs);
-  enemyArray.forEach((pokemon) => {
+  const enemyPokemon = JSON.parse(localStorage.getItem("enemyMOHAHA")) || [];
+  console.log(enemyPokemon, "enemypoke bilde");
+  enemyPokemon.forEach((pokemon) => {
     let enemyContainerImage = document.createElement("div");
     enemyContainerImage.classList.add("enemyImageOne");
     let pokemonId = pokemon.id;
@@ -272,4 +281,19 @@ function showEnemyImagePokemon() {
     console.log(enemyContainerImage, "imageEnemyContainer");
   });
   console.log(imageContainerEnemy, "imageContainerEnemy");
+}
+///////
+////Largre og hente info derfra
+
+function savePokemonBallsInLocalStorge(pokemon) {
+  const savePokemonCardsLocal =
+    JSON.parse(localStorage.getItem("PokemonBalls")) || [];
+  savePokemonCardsLocal.push(pokemon);
+  localStorage.setItem("PokemonBalls", JSON.stringify(savePokemonCardsLocal));
+}
+function enemySaveInLocalStorge(enemy) {
+  const savePokemonCardsLocal =
+    JSON.parse(localStorage.getItem("enemyMOHAHA")) || [];
+  savePokemonCardsLocal.push(enemy);
+  localStorage.setItem("enemyMOHAHA", JSON.stringify(savePokemonCardsLocal));
 }
