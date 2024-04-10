@@ -32,19 +32,22 @@ function removeAndShow() {
     showPokemons();
     showEnemy();
     showName();
+    showImagePokemons();
+    showEnemyImagePokemon();
   } else {
     alert("du må først velge pokemon og fiende");
   }
 }
 
 function showName() {
-  showPlayerName.innerText = playerName;
+  showPlayerName.innerText =
+    playerName.charAt(0).toUpperCase() + playerName.slice(1);
 }
 
 function choseName() {
   if (gameCounter === 0) {
     playerName = prompt("Hva vil du hete?");
-    playerName = playerName.charAt(0).toUpperCase() + playerName.slice(1);
+    // playerName =
     gameCounter += 10;
   }
 
@@ -86,12 +89,13 @@ function pokemonArrayPush(pokemon) {
     alert("du har valgt 3 pokemon og kan ikke velge flere");
   }
 }
-
+let countPokeinfo = 0;
 function showPokemons() {
   console.log("inne i showpokemon", pokeballs);
   pokeballs.forEach((pokemon) => {
+    countPokeinfo++;
     let statusContainer = document.createElement("div");
-    // let imageContainer = document.createElement("div");
+    statusContainer.classList.add(`pokemonInfo${countPokeinfo}`);
     let hpLife = pokemon.stats[0].base_stat;
     let pokemoneName =
       pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
@@ -104,21 +108,39 @@ function showPokemons() {
     statusContainer.innerHTML = `
     <p>#${pokemonId}</p>
     <h1>${pokemoneName}</h1>
+    <h3>${pokemonType}</h3>
     <p>Life: ${hpLife}</br>
     Attack: ${pokemonAttack}</br>
-    Defend: ${pokemonDefend}</p>
-    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>`;
+    Defend: ${pokemonDefend}</p
+   `;
     styleCardColor(statusContainer, pokemonType);
     gamePlace.appendChild(statusContainer);
+    console.log(countPokeinfo, "teller");
   });
 }
+let imageCounter = 0;
+function showImagePokemons() {
+  console.log("inne i showImagepokemon", pokeballs);
+  pokeballs.forEach((pokemon) => {
+    imageCounter++;
+    let imageContainer = document.createElement("div");
+    imageContainer.classList.add(`pokemonImage${imageCounter}`);
+    let pokemonId = pokemon.id;
+
+    imageContainer.innerHTML = `
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
+    `;
+    gamePlace.appendChild(imageContainer);
+  });
+}
+
 function styleCardColor(pokemonCard, pokemonType) {
   pokemonCard.style.display = "flex";
   pokemonCard.style.flexDirection = "column";
   pokemonCard.style.padding = "5px";
   pokemonCard.style.color = "black";
   pokemonCard.style.width = "150px";
-  pokemonCard.style.height = "350px";
+  pokemonCard.style.height = "250px";
   pokemonCard.style.border = "2px solid black";
   pokemonCard.style.borderRadius = "15px";
   pokemonCard.style.margin = "20px";
@@ -213,7 +235,7 @@ function showEnemy() {
   console.log("inne i showpokemon", pokeballs);
   enemyArray.forEach((pokemon) => {
     let enemyContain = document.createElement("div");
-    // let imageContainer = document.createElement("div");
+    enemyContain.classList.add("enemyinfo");
     let hpLife = pokemon.stats[0].base_stat;
     let pokemoneName =
       pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
@@ -229,8 +251,21 @@ function showEnemy() {
       <p>Life: ${hpLife}</br>
       Attack: ${pokemonAttack}</br>
       Defend: ${pokemonDefend}</p>
-      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>`;
+      `;
     styleCardColor(enemyContain, pokemonType);
     enemyContainer.appendChild(enemyContain);
+  });
+}
+
+function showEnemyImagePokemon() {
+  console.log("inne i showImagepokemon", pokeballs);
+  pokeballs.forEach((pokemon) => {
+    let imageContainer = document.createElement("div");
+    imageContainer.classList.add("enemyImage");
+    let pokemonId = pokemon.id;
+    imageContainer.innerHTML = `
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
+    `;
+    gamePlace.appendChild(imageContainer);
   });
 }

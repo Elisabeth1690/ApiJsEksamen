@@ -8,3 +8,39 @@ body {
 #letStart {
   margin-left: 20px;
 }
+#gamePlace {
+  position: absolute;
+}
+
+.pokemoninfo1 {
+  top: 20%;
+  left: 2%;
+}
+.pokemoninfo2 {
+  top: 40%;
+  left: 2%;
+}
+.pokemoninfo3 {
+  top: 60%;
+  left: 2%;
+}
+.pokemonimage1 {
+  bottom: 40%;
+  left: 10%;
+}
+.pokemonimage2 {
+  bottom: 20%;
+  left: 15%;
+}
+.pokemonimage3 {
+  bottom: 35%;
+  left: 35%;
+}
+.enemyinfo {
+  top: 20%;
+  right: 25%;
+}
+.enemyImage {
+  bottom: 20%;
+  right: 2%;
+}
