@@ -5,7 +5,10 @@ const emenyBtn = document.getElementById("choseEmenyBtn");
 const letStart = document.getElementById("letStart");
 const gamePlace = document.getElementById("gamePlace");
 const startBtn = document.getElementById("startBtn");
-const enemyContainer = document.getElementById("enemy");
+const enemyContainer = document.getElementById("enemyContainer");
+const pokemonInfoContainer = document.getElementById("pokemonInfoContainer");
+const imagePokemonContainer = document.getElementById("imagePokemonContainer");
+const imageContainerEnemy = document.getElementById("imageContainerEnemy");
 let showPlayerName = document.getElementById("playerName");
 let pokeballs = [];
 let playerName;
@@ -31,7 +34,7 @@ function removeAndShow() {
     console.log(playerName);
     showPokemons();
     showEnemy();
-    showName();
+    //showName();
     showImagePokemons();
     showEnemyImagePokemon();
   } else {
@@ -114,7 +117,7 @@ function showPokemons() {
     Defend: ${pokemonDefend}</p
    `;
     styleCardColor(statusContainer, pokemonType);
-    gamePlace.appendChild(statusContainer);
+    pokemonInfoContainer.appendChild(statusContainer);
     console.log(countPokeinfo, "teller");
   });
 }
@@ -123,14 +126,14 @@ function showImagePokemons() {
   console.log("inne i showImagepokemon", pokeballs);
   pokeballs.forEach((pokemon) => {
     imageCounter++;
-    let imageContainer = document.createElement("div");
-    imageContainer.classList.add(`pokemonImage${imageCounter}`);
+    let imageContainerPoke = document.createElement("div");
+    imageContainerPoke.classList.add(`pokemonImage${imageCounter}`);
     let pokemonId = pokemon.id;
 
-    imageContainer.innerHTML = `
+    imageContainerPoke.innerHTML = `
     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
     `;
-    gamePlace.appendChild(imageContainer);
+    imagePokemonContainer.appendChild(imageContainerPoke);
   });
 }
 
@@ -235,7 +238,6 @@ function showEnemy() {
   console.log("inne i showpokemon", pokeballs);
   enemyArray.forEach((pokemon) => {
     let enemyContain = document.createElement("div");
-    enemyContain.classList.add("enemyinfo");
     let hpLife = pokemon.stats[0].base_stat;
     let pokemoneName =
       pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
@@ -259,13 +261,15 @@ function showEnemy() {
 
 function showEnemyImagePokemon() {
   console.log("inne i showImagepokemon", pokeballs);
-  pokeballs.forEach((pokemon) => {
-    let imageContainer = document.createElement("div");
-    imageContainer.classList.add("enemyImage");
+  enemyArray.forEach((pokemon) => {
+    let enemyContainerImage = document.createElement("div");
+    enemyContainerImage.classList.add("enemyImageOne");
     let pokemonId = pokemon.id;
-    imageContainer.innerHTML = `
+    enemyContainerImage.innerHTML = `
     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
     `;
-    gamePlace.appendChild(imageContainer);
+    imageContainerEnemy.appendChild(enemyContainerImage);
+    console.log(enemyContainerImage, "imageEnemyContainer");
   });
+  console.log(imageContainerEnemy, "imageContainerEnemy");
 }

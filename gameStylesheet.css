@@ -9,38 +9,67 @@ body {
   margin-left: 20px;
 }
 #gamePlace {
-  position: absolute;
+  display: flex;
+  border: 1px solid black;
+  width: 100%;
+  height: 100vh;
+  background-image: url("assets/bilde1.JPG");
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  justify-content: space-between;
+}
+#pokemonInfoContainer {
+  position: relative;
+  left: 2%;
+}
+.pokemonInfo1 {
+  margin-top: 15%;
+  width: 150px;
+  height: 250px;
+}
+.pokemonInfo2 {
+  margin-top: 30%;
+  width: 150px;
+  height: 250px;
+}
+.pokemonInfo3 {
+  margin-top: 30%;
+  width: 150px;
+  height: 250px;
 }
 
-.pokemoninfo1 {
-  top: 20%;
-  left: 2%;
+#imageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 }
-.pokemoninfo2 {
-  top: 40%;
-  left: 2%;
-}
-.pokemoninfo3 {
-  top: 60%;
-  left: 2%;
-}
-.pokemonimage1 {
-  bottom: 40%;
-  left: 10%;
-}
-.pokemonimage2 {
-  bottom: 20%;
-  left: 15%;
-}
-.pokemonimage3 {
-  bottom: 35%;
-  left: 35%;
-}
-.enemyinfo {
-  top: 20%;
-  right: 25%;
-}
-.enemyImage {
-  bottom: 20%;
+
+#enemyContainer {
+  position: relative;
   right: 2%;
+}
+.imageContainerEnemy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokemonImage1 {
+  margin-top: 150px;
+  transform: scale(2);
+}
+.pokemonImage2 {
+  margin-top: 150px;
+  transform: scale(2);
+}
+.pokemonImage3 {
+  margin-top: 150px;
+  transform: scale(2);
+}
+.enemyImageOne {
+  margin-top: 400px;
+  transform: scale(3);
 }
