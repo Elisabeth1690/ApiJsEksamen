@@ -43,6 +43,7 @@ function removeAndShow() {
     showName();
     showImagePokemons();
     showEnemyImagePokemon();
+    boostLife();
   } else {
     alert("du må først velge pokemon og fiende");
   }
@@ -97,7 +98,7 @@ function pokemonArrayPush(pokemon) {
 }
 let countPokeinfo = 0;
 function showPokemons() {
-  console.log(pokeballs, "array");
+  pokemonInfoContainer.innerHTML = "";
   pokeballs.forEach((pokemon) => {
     countPokeinfo++;
     let statusContainer = document.createElement("div");
@@ -114,10 +115,9 @@ function showPokemons() {
     statusContainer.innerHTML = `
     <p>#${pokemonId}</p>
     <h1>${pokemoneName}</h1>
-    <h3>${pokemonType}</h3>
-    <p>Life: ${hpLife}</br>
+    <p><strong>Life: ${hpLife}</br>
     Attack: ${pokemonAttack}</br>
-    Defend: ${pokemonDefend}</p
+    Defend: ${pokemonDefend}</strong></p
     `;
 
     styleCardColor(statusContainer, pokemonType);
@@ -238,6 +238,7 @@ function enemyArrayPush(enemy) {
 }
 
 function showEnemy() {
+  enemyContainer.innerHTML = "";
   enemyArray.forEach((pokemon) => {
     let enemyContain = document.createElement("div");
     let hpLife = pokemon.stats[0].base_stat;
@@ -252,9 +253,9 @@ function showEnemy() {
     enemyContain.innerHTML = `
       <p>#${pokemonId}</p>
       <h1>${pokemoneName}</h1>
-      <p>Life: ${hpLife}</br>
+      <p><strong>Life: ${hpLife}</br>
       Attack: ${pokemonAttack}</br>
-      Defend: ${pokemonDefend}</p>
+      Defend: ${pokemonDefend}</strong></p>
       `;
     styleCardColor(enemyContain, pokemonType);
     enemyContainer.appendChild(enemyContain);
@@ -274,3 +275,76 @@ function showEnemyImagePokemon() {
   });
   console.log(imageContainerEnemy, "imageContainerEnemy");
 }
+
+/////////////////////////////////////////////////////
+///////game
+document.addEventListener("keydown", (number) => {
+  if (number.key === "1") {
+    damgeEnemy(
+      "1",
+      pokeballs[0].stats[0].base_stat,
+      pokeballs[0].stats[1].base_stat,
+      pokeballs[0].name
+    );
+  }
+  if (number.key === "2") {
+    damgeEnemy(
+      "2",
+      pokeballs[1].stats[0].base_stat,
+      pokeballs[1].stats[1].base_stat,
+      pokeballs[1].name
+    );
+  }
+  if (number.key === "3") {
+    damgeEnemy(
+      "3",
+      pokeballs[2].stats[0].base_stat,
+      pokeballs[2].stats[1].base_stat,
+      pokeballs[2].name
+    );
+  }
+  if (number.key === "4") {
+    damgeEnemy("4");
+  }
+  if (number.key === "5") {
+    damgeEnemy("5");
+  }
+  if (number.key === "6") {
+    damgeEnemy("6");
+  }
+});
+
+function boostLife() {
+  if (enemyArray[0].stats[0].base_stat < 200) {
+    enemyArray[0].stats[0].base_stat = 600;
+    console.log(enemyArray[0].stats[0].base_stat);
+    alert(`${enemyArray[0].name} brukt boostLife og økte livet sitt til 600Hp`);
+    showEnemy();
+  }
+}
+
+function damgeEnemy(pokemonNumber, pokemonLife, pokemonAttack, pokemonName) {
+  if (pokemonNumber === "1" && pokemonLife > 0) {
+    alert(`Da har valgt at ${pokemonName} skal ta 
+    ${pokemonAttack} av livet til ${enemyArray[0].name}`);
+    attack(pokemonAttack);
+  }
+  if (pokemonNumber === "2" && pokemonLife > 0) {
+    alert(`Da har valgt at ${pokemonName} skal ta 
+    ${pokemonAttack} av livet til ${enemyArray[0].name}`);
+    attack(pokemonAttack);
+  }
+  if (pokemonNumber === "3" && pokemonLife > 0) {
+    alert(`Da har valgt at ${pokemonName} skal ta 
+    ${pokemonAttack} av livet til ${enemyArray[0].name}`);
+    attack(pokemonAttack);
+  }
+}
+function attack(pokemonAttack) {
+  console.log(pokemonAttack, "inne i attck");
+  enemyArray[0].stats[0].base_stat -= pokemonAttack;
+  console.log(enemyArray[0].stats[0].base_stat);
+  showEnemy();
+}
+
+function enemyAttack() {}
