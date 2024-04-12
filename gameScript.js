@@ -9,6 +9,8 @@ const enemyContainer = document.getElementById("enemyContainer");
 const pokemonInfoContainer = document.getElementById("pokemonInfoContainer");
 const imagePokemonContainer = document.getElementById("imagePokemonContainer");
 const imageContainerEnemy = document.getElementById("imageContainerEnemy");
+const gameRuls = document.getElementById("gameRuls");
+
 let showPlayerName = document.getElementById("playerName");
 let pokeballs = [];
 let playerName;
@@ -21,18 +23,12 @@ document.addEventListener("click", async (e) => {
     enemyType();
   }
   if (e.target === nameBtn) {
-    deleteBeforeStarteNewGame();
     choseName();
   }
   if (e.target === startBtn) {
     removeAndShow();
   }
 });
-
-function deleteBeforeStarteNewGame() {
-  localStorage.clear("PokemonBalls");
-  localStorage.clear("enemyMOHAHA");
-}
 
 function removeAndShow() {
   if (pokeballs.length === 3 && enemyArray.length === 1) {
@@ -43,6 +39,7 @@ function removeAndShow() {
     showImagePokemons();
     showEnemyImagePokemon();
     boostLife();
+    showHowToPlay();
   } else {
     alert("du må først velge pokemon og fiende");
   }
@@ -112,7 +109,7 @@ function showPokemons() {
       pokemon.types[0].type.name.slice(1);
     statusContainer.innerHTML = `
     <p>#${pokemonId}</p>
-    <h1>${pokemoneName}</h1>
+    <h3>${pokemoneName}</h3>
     <p><strong>Life: ${hpLife}</br>
     Attack: ${pokemonAttack}</br>
     Defend: ${pokemonDefend}</strong></p
@@ -144,7 +141,7 @@ function styleCardColor(pokemonCard, pokemonType) {
   pokemonCard.style.padding = "5px";
   pokemonCard.style.color = "black";
   pokemonCard.style.width = "150px";
-  pokemonCard.style.height = "250px";
+  pokemonCard.style.height = "200px";
   pokemonCard.style.border = "2px solid black";
   pokemonCard.style.borderRadius = "15px";
   pokemonCard.style.margin = "20px";
@@ -299,23 +296,81 @@ document.addEventListener("keydown", (number) => {
     );
   }
   if (number.key === "4") {
-    damgeEnemy("4");
-  }
-  if (number.key === "5") {
-    damgeEnemy("5");
-  }
-  if (number.key === "6") {
-    damgeEnemy("6");
+    winGame();
   }
 });
 
-function addAlive() {}
+function showHowToPlay() {
+  let pokemonOne =
+    pokeballs[0].name.charAt(0).toUpperCase() + pokeballs[0].name.slice(1);
+
+  let pokemonTwo =
+    pokeballs[1].name.charAt(0).toUpperCase() + pokeballs[1].name.slice(1);
+  let pokemonThrees =
+    pokeballs[2].name.charAt(0).toUpperCase() + pokeballs[2].name.slice(1);
+  gameRuls.style.width = `100%`;
+  gameRuls.style.height = `200px`;
+  gameRuls.style.backgroundColor = `white`;
+  gameRuls.style.padding = `15px`;
+
+  gameRuls.innerHTML = ` 
+  <h3>Spille instrukser</h3>
+  <p>Du kan bruke <strong>${pokemonOne}</strong> til å angripe med å trykke på knapp 1</p>
+  <p>Du kan bruke <strong>${pokemonTwo}</strong> til å angripe med å trykke på knapp 2</p>
+  <p>Du kan bruke <strong>${pokemonThrees}</strong> til å angripe med å trykke på knapp 3</p>
+  `;
+}
+
+function showSpecialMove() {
+  if (gameCounter === 30) {
+    alert(
+      "Du har kjempet hardt og har fått muligheten til bruke er spesial angrep, se spill regler for oppdatert info"
+    );
+    gameRuls.innerHTML = "";
+    let pokemonOne =
+      pokeballs[0].name.charAt(0).toUpperCase() + pokeballs[0].name.slice(1);
+
+    let pokemonTwo =
+      pokeballs[1].name.charAt(0).toUpperCase() + pokeballs[1].name.slice(1);
+    let pokemonThrees =
+      pokeballs[2].name.charAt(0).toUpperCase() + pokeballs[2].name.slice(1);
+
+    gameRuls.style.width = `100%`;
+    gameRuls.style.height = `200px`;
+    gameRuls.style.backgroundColor = `white`;
+    gameRuls.style.padding = `15px`;
+    gameRuls.innerHTML = ` 
+    <h3>Spille instrukser</h3>
+    <p>Du kan bruke <strong>${pokemonOne}</strong> til å angripe med å trykke 1</p>
+    <p>Du kan bruke <strong>${pokemonTwo}</strong> til å angripe med å trykke 2</p>
+    <p>Du kan bruke <strong>${pokemonThrees}</strong> til å angripe med å trykke 3</p>
+    <p> Du har kjempet hardt og har fått muligheten til</br>
+    bruke er spesial angrep, trykk på<strong> 4 </strong>for å vinne, eller ta dine sjangse,
+    uten spesial angrep</p>
+    `;
+  }
+}
+function winGame() {
+  if (gameCounter === 30) {
+    gameCounter += 10;
+    alert(`${playerName} har valgt og  at sin siste pokemon skal bruker super attack på ${
+      enemyArray[0].name.charAt(0).toUpperCase() + enemyArray[0].name.slice(1)
+    } 
+    og det tar 1000 i liv`);
+    if (gameCounter === 40) {
+      attack("1000");
+    }
+  }
+}
 
 function boostLife() {
   if (enemyArray[0].stats[0].base_stat < 200) {
     enemyArray[0].stats[0].base_stat = 600;
     console.log(enemyArray[0].stats[0].base_stat);
-    alert(`${enemyArray[0].name} så at ${playerName} kom for å angripe,
+    alert(`${
+      enemyArray[0].name.charAt(0).toUpperCase() + enemyArray[0].name.slice(1)
+    }  
+    så at ${playerName} kom for å angripe,
     og brukt boostLife og økte livet sitt til 600Hp`);
     showEnemy();
   }
@@ -323,25 +378,43 @@ function boostLife() {
 
 function damgeEnemy(pokemonNumber, pokemonLife, pokemonAttack, pokemonName) {
   if (pokemonNumber === "1" && pokemonLife > 0) {
-    alert(`Da har valgt at ${pokemonName} skal ta 
-    ${pokemonAttack} av livet til ${enemyArray[0].name}`);
+    gameCounter += 10;
+    alert(` ${
+      pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+    } Har valg og angripe med sitt vanlige angrep og tar
+    ${pokemonAttack} av livet til ${
+      enemyArray[0].name.charAt(0).toUpperCase() + enemyArray[0].name.slice(1)
+    }`);
     attack(pokemonAttack);
+    showSpecialMove();
   }
   if (pokemonNumber === "2" && pokemonLife > 0) {
-    alert(`Da har valgt at ${pokemonName} skal ta 
-    ${pokemonAttack} av livet til ${enemyArray[0].name}`);
+    gameCounter += 10;
+    alert(` ${
+      pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+    } Har valg og angripe med sitt vanlige angrep og tar
+    ${pokemonAttack} av livet til ${
+      enemyArray[0].name.charAt(0).toUpperCase() + enemyArray[0].name.slice(1)
+    }`);
     attack(pokemonAttack);
+    showSpecialMove();
   }
   if (pokemonNumber === "3" && pokemonLife > 0) {
-    alert(`Da har valgt at ${pokemonName} skal ta 
-    ${pokemonAttack} av livet til ${enemyArray[0].name}`);
+    gameCounter += 10;
+    alert(` ${
+      pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+    } Har valg og angripe med sitt vanlige angrep og tar
+    ${pokemonAttack} av livet til ${
+      enemyArray[0].name.charAt(0).toUpperCase() + enemyArray[0].name.slice(1)
+    }`);
     attack(pokemonAttack);
+    showSpecialMove();
   }
 }
 function attack(pokemonAttack) {
   console.log(pokemonAttack, "inne i attck");
   enemyArray[0].stats[0].base_stat -= pokemonAttack;
-  console.log(enemyArray[0].stats[0].base_stat);
+
   showEnemy();
   enemyAttack();
 }
@@ -349,7 +422,6 @@ function attack(pokemonAttack) {
 function enemyAttack() {
   let pokemonAlive = pokeballs.filter((pokemon) => pokemon.is_default);
   if (pokemonAlive.length > 0) {
-    console.log("pokemonAlive", pokemonAlive);
     let damgePokemon = Math.floor(Math.random() * pokemonAlive.length);
 
     let enemyAttackPokemon = pokemonAlive[damgePokemon];
@@ -359,10 +431,14 @@ function enemyAttack() {
 }
 
 function enemySuperAttack(enemyAttackPokemon) {
-  console.log(enemyArray[0].stats[0].base_stat, enemyAttackPokemon, "angrip");
   if (enemyArray[0].stats[0].base_stat > 0) {
+    alert(
+      `${
+        enemyArray[0].name.charAt(0).toUpperCase() + enemyArray[0].name.slice(1)
+      } Har valgt og angrip tilbake`
+    );
     enemyAttackPokemon.stats[0].base_stat -= enemyArray[0].stats[1].base_stat;
-    /// ligg inn en alert
+
     if ((enemyAttackPokemon = pokeballs[0])) {
       showPokemons();
       if (pokeballs[0].stats[0].base_stat <= 0) {
@@ -384,6 +460,8 @@ function enemySuperAttack(enemyAttackPokemon) {
         deadPokemon();
       }
     }
+  } else {
+    deadPokemon();
   }
 }
 
@@ -412,14 +490,21 @@ function deadPokemon() {
     ZeroPokemonLeft();
     return pokeballs;
   }
+  if (
+    enemyArray[0].stats[0].base_stat <= 0 &&
+    enemyArray[0].is_default == true
+  ) {
+    enemyArray[0].is_default = false;
+    console.log(enemyArray[0].is_default, "enemy liv");
+    gameOver();
+  }
 }
 
 function styleDeadPokemon(imagePokemon) {
-  imagePokemon.style.width = "60px";
-  imagePokemon.style.height = "60px";
-  imagePokemon.style.backgroundColor = "black";
-  imagePokemon.innerText = "Jeg er utmattet";
-  imagePokemon.style.color = "red";
+  imagePokemon.innerHTML = "";
+
+  imagePokemon.style.width = "80px";
+  imagePokemon.style.height = "100px";
 }
 
 function ZeroPokemonLeft() {
@@ -433,6 +518,7 @@ function ZeroPokemonLeft() {
 }
 
 function gameOver() {
+  console.log("game over");
   div3 = document.createElement("div");
   h1 = document.createElement("h1");
   div3.style.width = `800px`;
@@ -442,12 +528,11 @@ function gameOver() {
   div3.style.position = "absolute";
   div3.style.left = "33%";
   div3.style.top = "25%";
-  //div3.style.fontSize = "xxx-large";
+  div3.style.fontSize = "xx-large";
   div3.style.display = "flex";
-  div3.style.justifyContent = "center";
+  div3.style.justifyContent = "start";
   div3.style.alignItems = "center";
   div3.style.textAlign = "center";
-  // div3.style.fontFamily = `Sixtyfour`;
   document.body.append(div3);
   div3.append(h1);
   gamePlace.innerHTML = "";
@@ -460,8 +545,8 @@ function gameOver() {
     h1.textContent = "GAME OVER";
     h1.style.color = "red";
   }
-  if (enemyArray[0].stats[0].base_stat <= 0) {
+  if (enemyArray[0].is_default == false) {
     h1.textContent = " Gratulerer du har vunnet!!!";
-    h1.style.color = "red";
+    h1.style.color = "yellow";
   }
 }
