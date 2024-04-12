@@ -308,8 +308,8 @@ function showHowToPlay() {
     pokeballs[1].name.charAt(0).toUpperCase() + pokeballs[1].name.slice(1);
   let pokemonThrees =
     pokeballs[2].name.charAt(0).toUpperCase() + pokeballs[2].name.slice(1);
-  gameRuls.style.width = `300px`;
-  gameRuls.style.height = `300px`;
+  gameRuls.style.width = `100%`;
+  gameRuls.style.height = `200px`;
   gameRuls.style.backgroundColor = `white`;
   gameRuls.style.padding = `15px`;
 
@@ -322,7 +322,7 @@ function showHowToPlay() {
 }
 
 function showSpecialMove() {
-  if ((gameCounter = 30)) {
+  if (gameCounter === 30) {
     alert(
       "Du har kjempet hardt og har fått muligheten til bruke er spesial angrep, se spill regler for oppdatert info"
     );
@@ -335,8 +335,8 @@ function showSpecialMove() {
     let pokemonThrees =
       pokeballs[2].name.charAt(0).toUpperCase() + pokeballs[2].name.slice(1);
 
-    gameRuls.style.width = `300px`;
-    gameRuls.style.height = `300px`;
+    gameRuls.style.width = `100%`;
+    gameRuls.style.height = `200px`;
     gameRuls.style.backgroundColor = `white`;
     gameRuls.style.padding = `15px`;
     gameRuls.innerHTML = ` 
@@ -351,13 +351,13 @@ function showSpecialMove() {
   }
 }
 function winGame() {
-  if ((gameCounter = 30)) {
+  if (gameCounter === 30) {
     gameCounter += 10;
     alert(`${playerName} har valgt og  at sin siste pokemon skal bruker super attack på ${
       enemyArray[0].name.charAt(0).toUpperCase() + enemyArray[0].name.slice(1)
     } 
     og det tar 1000 i liv`);
-    if ((gameCounter = 40)) {
+    if (gameCounter === 40) {
       attack("1000");
     }
   }
@@ -367,7 +367,10 @@ function boostLife() {
   if (enemyArray[0].stats[0].base_stat < 200) {
     enemyArray[0].stats[0].base_stat = 600;
     console.log(enemyArray[0].stats[0].base_stat);
-    alert(`${enemyArray[0].name} så at ${playerName} kom for å angripe,
+    alert(`${
+      enemyArray[0].name.charAt(0).toUpperCase() + enemyArray[0].name.slice(1)
+    }  
+    så at ${playerName} kom for å angripe,
     og brukt boostLife og økte livet sitt til 600Hp`);
     showEnemy();
   }
@@ -498,11 +501,10 @@ function deadPokemon() {
 }
 
 function styleDeadPokemon(imagePokemon) {
-  imagePokemon.style.width = "70px";
-  imagePokemon.style.height = "70px";
-  imagePokemon.style.backgroundColor = "black";
-  imagePokemon.innerText = "Jeg er utmattet";
-  imagePokemon.style.color = "red";
+  imagePokemon.innerHTML = "";
+
+  imagePokemon.style.width = "80px";
+  imagePokemon.style.height = "100px";
 }
 
 function ZeroPokemonLeft() {
@@ -528,7 +530,7 @@ function gameOver() {
   div3.style.top = "25%";
   div3.style.fontSize = "xx-large";
   div3.style.display = "flex";
-  div3.style.justifyContent = "center";
+  div3.style.justifyContent = "start";
   div3.style.alignItems = "center";
   div3.style.textAlign = "center";
   document.body.append(div3);
