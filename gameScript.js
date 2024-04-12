@@ -205,7 +205,6 @@ function styleCardColor(pokemonCard, pokemonType) {
 ////////// Velg Enemy
 function enemyType() {
   let enemyType = document.querySelector("#choseEmeny").value;
-  console.log(enemyType, "enmyetyp");
   fetchEnemy(enemyType);
 }
 
@@ -214,7 +213,6 @@ async function fetchEnemy(type) {
     await fetch(`https://pokeapi.co/api/v2/pokemon/${type}`)
       .then((response) => response.json())
       .then(function (pokemon) {
-        console.log(pokemon, "finde pokemon");
         enemyArrayPush(pokemon);
       });
   } catch (error) {
@@ -366,7 +364,6 @@ function winGame() {
 function boostLife() {
   if (enemyArray[0].stats[0].base_stat < 200) {
     enemyArray[0].stats[0].base_stat = 600;
-    console.log(enemyArray[0].stats[0].base_stat);
     alert(`${
       enemyArray[0].name.charAt(0).toUpperCase() + enemyArray[0].name.slice(1)
     }  
@@ -412,7 +409,6 @@ function damgeEnemy(pokemonNumber, pokemonLife, pokemonAttack, pokemonName) {
   }
 }
 function attack(pokemonAttack) {
-  console.log(pokemonAttack, "inne i attck");
   enemyArray[0].stats[0].base_stat -= pokemonAttack;
 
   showEnemy();
@@ -467,7 +463,6 @@ function enemySuperAttack(enemyAttackPokemon) {
 
 function deadPokemon() {
   if (pokeballs[0].stats[0].base_stat <= 0 && pokeballs[0].is_default == true) {
-    console.log("inne i dead pokemon1");
     let imagePokemon = document.querySelector(".pokemonImage1");
     pokeballs[0].is_default = false;
     styleDeadPokemon(imagePokemon);
@@ -475,7 +470,6 @@ function deadPokemon() {
     return pokeballs;
   }
   if (pokeballs[1].stats[0].base_stat <= 0 && pokeballs[1].is_default == true) {
-    console.log("inne i dead pokemon 2");
     let imagePokemon = document.querySelector(".pokemonImage2");
     pokeballs[1].is_default = false;
     styleDeadPokemon(imagePokemon);
@@ -483,7 +477,6 @@ function deadPokemon() {
     return pokeballs;
   }
   if (pokeballs[2].stats[0].base_stat <= 0 && pokeballs[2].is_default == true) {
-    console.log("inne i dead pokemon 3");
     let imagePokemon = document.querySelector(".pokemonImage3");
     pokeballs[2].is_default = false;
     styleDeadPokemon(imagePokemon);
@@ -495,7 +488,6 @@ function deadPokemon() {
     enemyArray[0].is_default == true
   ) {
     enemyArray[0].is_default = false;
-    console.log(enemyArray[0].is_default, "enemy liv");
     gameOver();
   }
 }
@@ -518,7 +510,6 @@ function ZeroPokemonLeft() {
 }
 
 function gameOver() {
-  console.log("game over");
   div3 = document.createElement("div");
   h1 = document.createElement("h1");
   div3.style.width = `800px`;
