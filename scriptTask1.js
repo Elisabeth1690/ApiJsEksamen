@@ -95,8 +95,8 @@ async function fetchPokemonType() {
       .then((response) => response.json())
       .then(function (allpokemons) {
         showPokemonContainer.innerHTML = "";
-        allpokemons.results.forEach(function (pokemonFullInfo, index) {
-          fetchPokemonFullInfo(pokemonFullInfo, index);
+        allpokemons.results.forEach(function (pokemonFullInfo) {
+          fetchPokemonFullInfo(pokemonFullInfo);
         });
       });
   } catch (error) {
@@ -202,21 +202,14 @@ function getCreatePokemontType() {
 function pokeName(createType) {
   let chosePokeName = prompt("hva vil du at pokemonen din skal hete?");
   let choseNum = Math.floor(Math.random() * 200) + 50;
-  if (!chosePokeName) {
-    alert(" Ops, du glemte å skrive navn, prøv igjen");
-    let chosePokeName = prompt("hva vil du at pokemonen din skal hete?");
-    console.log(chosePokeName);
-  }
   if (everyPokemonArray.length.name != chosePokeName) {
     let newPokemonQueen = {
       name: `${chosePokeName}`,
       id: `${choseNum}`,
       types: [{ type: { name: `${createType}` } }],
     };
-
-    /// er veldig stolt over den ut nøstingen over her
     everyPokemonArray.push(newPokemonQueen);
-    console.log(everyPokemonArray, "array");
+    console.log(everyPokemonArray, newPokemonQueen);
     fatchSavedPokemonCards();
     showPokemon();
   }
@@ -227,6 +220,7 @@ function pokeName(createType) {
 function savePokeCard(pokeDex) {
   if (savedPokemonCards.length < 5) {
     const findCard = savedPokemonCards.some((item) => item.id === pokeDex.id);
+    console.log(pokeDex.id);
 
     if (!findCard) {
       savePokemonInLocalStorge(pokeDex);
@@ -237,8 +231,6 @@ function savePokeCard(pokeDex) {
   } else {
     alert("Du for ikke lagre mer enn 5 favoritter, vær vennlig og slett en");
   }
-
-  console.log(pokeDex, "inne i savecard");
 }
 
 function savePokemonInLocalStorge(pokeDex) {
@@ -294,24 +286,25 @@ function fatchSavedPokemonCards() {
   <option value="water">Water</option>
 </select>
 <button class="rewritePokeBtn" data-index="${index}">Redigere</button>
-  <button class="deleteBtn" data-index="${index}">Delete</button>
+<button class="deleteBtn" data-index="${index}">Delete</button>
   `;
 
     styleCardColor(pokemonSavedCard, pokemonType);
     savedCardsContainer.appendChild(pokemonSavedCard);
-
     const rewritePokeBtn = document.querySelector(
       `.rewritePokeBtn[data-index="${index}"]`
     );
+    rewritePokeBtn.style.backgroundColor = "orange";
     rewritePokeBtn.addEventListener("click", () => {
       const selectPokemonType =
         pokemonSavedCard.querySelector(".chosePokemonTyp").value;
-      rewritePokemonBtn(pokemon, selectPokemonType, index);
+      rewritePokemonBtn(pokemonSavedCard, selectPokemonType, index);
     });
 
     const deleteBtn = document.querySelector(
       `.deleteBtn[data-index="${index}"]`
     );
+    deleteBtn.style.backgroundColor = "red";
     deleteBtn.addEventListener("click", () => {
       deletePokeCard(index);
     });
@@ -322,29 +315,28 @@ function fatchSavedPokemonCards() {
 ////1.6 Redigere Pokemon
 function rewritePokemonBtn(pokemonCard, selectPokemonType, index) {
   let newPokemonName = prompt("Skriv inn ny fornavn");
-  console.log(newPokemonName, pokemonCard, "før if");
+
   if (newPokemonName !== null && newPokemonName.trim() !== "") {
     pokemonCard.name = newPokemonName;
     pokemonCard.types[0].type.name = selectPokemonType;
-    console.log(newPokemonName, "inne i ifen", selectPokemonType);
-  }
-  if (selectPokemonType !== null) {
-    pokemonCard.types[0].type.name = selectPokemonType;
-  }
-  try {
-    console.log("inne i try nummer1", pokemonCard);
+    try {
+      console.log("inne i try nummer1", pokemonCard);
 
-    savedPokemonCards[index] = pokemonCard;
-    everyPokemonArray[index] = pokemonCard;
-    const savePokemonCardsLocal =
-      JSON.parse(localStorage.getItem("PokemonKort")) || [];
-    savePokemonCardsLocal[index] = pokemonCard;
-
-    localStorage.setItem("PokemonKort", JSON.stringify(savePokemonCardsLocal));
-    showPokemon();
-    fatchSavedPokemonCards();
-  } catch (error) {
-    console.error("Feil med endring av navn", error);
+      savedPokemonCards[index] = pokemonCard;
+      everyPokemonArray[index] = pokemonCard;
+      const savePokemonCardsLocal =
+        JSON.parse(localStorage.getItem("PokemonKort")) || [];
+      savePokemonCardsLocal[index] = pokemonCard;
+      console.log("inne i try nummer2", pokemonCard);
+      localStorage.setItem(
+        "PokemonKort",
+        JSON.stringify(savePokemonCardsLocal)
+      );
+      showPokemon();
+      fatchSavedPokemonCards();
+    } catch (error) {
+      console.error("Feil med endring av navn", error);
+    }
   }
 }
 
@@ -360,11 +352,11 @@ function deletePokeCard(index) {
     savedPokemonCards.splice(index, 1);
     everyPokemonArray.splice(index, 1);
     localStorage.setItem("PokemonKort", JSON.stringify(savePokemonCardsLocal));
-    showPokemon();
-    fatchSavedPokemonCards();
   } catch (error) {
     console.error("klarte ikke og oppdatere arrayet", error);
   }
+  showPokemon();
+  fatchSavedPokemonCards();
 }
 //////////
 ////tøm showPokemonContainer
@@ -427,7 +419,7 @@ function styleCardColor(pokemonCard, pokemonType) {
   if (pokemonType.toLowerCase() === "poison") {
     pokemonCard.style.backgroundColor = "rgb(100, 66, 221)";
   }
-  if (pokemonType.toLowerCase() === "pyschic") {
+  if (pokemonType.toLowerCase() === "psychic") {
     pokemonCard.style.backgroundColor = "rgb(64, 16, 236)";
   }
   if (pokemonType.toLowerCase() === "rock") {
@@ -447,10 +439,7 @@ function sootPokomone(type) {
     (pokemon) => pokemon.types[0].type.name === type
   );
   if (typePokemon.length > 0) {
-    showPokemonContainer.innerHTML = "";
-    typePokemon.forEach(function (pokemonTypeDex, index) {
-      showSootPokemon(pokemonTypeDex, index);
-    });
+    showSootPokemon(typePokemon);
   } else {
     showPokemonContainer.innerHTML = `<p> Beklager, men vi har ikke hentet ut typen: ${
       type.charAt(0).toUpperCase() + type.slice(1)
@@ -463,20 +452,20 @@ function sootPokomone(type) {
   }
 }
 
-function showSootPokemon(pokeDex, index) {
-  console.log(pokeDex, "inne i vis fram");
-  let pokemonCard = document.createElement("div");
-  let pokemonName =
-    pokeDex.name.charAt(0).toUpperCase() + pokeDex.name.slice(1);
-  let pokemonId = pokeDex.id;
-  let pokemonType =
-    pokeDex.types[0].type.name.charAt(0).toUpperCase() +
-    pokeDex.types[0].type.name.slice(1);
-  pokemonCard.innerHTML = ` 
+function showSootPokemon(pokeDex) {
+  showPokemonContainer.innerHTML = "";
+  pokeDex.forEach((pokeDex, index) => {
+    let pokemonCard = document.createElement("div");
+    let pokemonName =
+      pokeDex.name.charAt(0).toUpperCase() + pokeDex.name.slice(1);
+    let pokemonId = pokeDex.id;
+    let pokemonType =
+      pokeDex.types[0].type.name.charAt(0).toUpperCase() +
+      pokeDex.types[0].type.name.slice(1);
+    pokemonCard.innerHTML = ` 
   <p>#${pokemonId}</p>
 <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png"/>
 <p>Name: ${pokemonName} <br/>
-Type: ${pokemonType}</p>
 Type: ${pokemonType}</p>
 <p>Velg ny Type:</p>
 <select class="chosePokemonTyp">
@@ -503,27 +492,32 @@ Type: ${pokemonType}</p>
 <button class="deleteBtn" data-index="${index}">Delete</button>
 <button class="saveBtn" data-index="${index}">Save</button>
 `;
-  styleCardColor(pokemonCard, pokemonType);
-  showPokemonContainer.appendChild(pokemonCard);
+    styleCardColor(pokemonCard, pokemonType);
+    showPokemonContainer.appendChild(pokemonCard);
 
-  const savePokeBtn = document.querySelector(`.saveBtn[data-index="${index}"]`);
-  savePokeBtn.style.backgroundColor = "green";
-  savePokeBtn.onclick = function () {
-    savePokeCard(pokeDex);
-  };
-  const rewritePokeBtn = document.querySelector(
-    `.rewritePokeBtn[data-index="${index}"]`
-  );
-  rewritePokeBtn.style.backgroundColor = "orange";
-  rewritePokeBtn.addEventListener("click", () => {
-    const selectPokemonType =
-      pokemonCard.querySelector(".chosePokemonTyp").value;
-    rewritePokemonBtn(pokeDex, selectPokemonType, index);
-  });
+    const savePokeBtn = document.querySelector(
+      `.saveBtn[data-index="${index}"]`
+    );
+    savePokeBtn.style.backgroundColor = "green";
+    savePokeBtn.onclick = function () {
+      savePokeCard(pokeDex);
+    };
+    const rewritePokeBtn = document.querySelector(
+      `.rewritePokeBtn[data-index="${index}"]`
+    );
+    rewritePokeBtn.style.backgroundColor = "orange";
+    rewritePokeBtn.addEventListener("click", () => {
+      const selectPokemonType =
+        pokemonCard.querySelector(".chosePokemonTyp").value;
+      rewritePokemonBtn(pokeDex, selectPokemonType, index);
+    });
 
-  const deleteBtn = document.querySelector(`.deleteBtn[data-index="${index}"]`);
-  deleteBtn.style.backgroundColor = "red";
-  deleteBtn.addEventListener("click", () => {
-    deletePokeCard(index);
+    const deleteBtn = document.querySelector(
+      `.deleteBtn[data-index="${index}"]`
+    );
+    deleteBtn.style.backgroundColor = "red";
+    deleteBtn.addEventListener("click", () => {
+      deletePokeCard(index);
+    });
   });
 }
